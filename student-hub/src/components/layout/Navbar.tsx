@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Bell, Wallet, ChevronDown, Menu } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRouter } from 'next/navigation';
@@ -14,6 +15,28 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
     const router = useRouter();
     const [showNotifications, setShowNotifications] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
+    const [isDark, setIsDark] = useState(false);
+
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initDark = saved ? saved === 'dark' : prefersDark;
+            setIsDark(initDark);
+            if (initDark) document.documentElement.classList.add('dark');
+        } catch (e) {
+            // ignore
+        }
+    }, []);
+
+    const toggleTheme = () => {
+        const next = !isDark;
+        setIsDark(next);
+        try {
+            localStorage.setItem('theme', next ? 'dark' : 'light');
+        } catch (e) {}
+        document.documentElement.classList.toggle('dark', next);
+    };
 
     return (
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-border">
@@ -43,6 +66,10 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
 
                 {/* Right section */}
                 <div className="flex items-center gap-3">
+                    {/* Theme toggle */}
+                    <button onClick={toggleTheme} aria-label="Toggle theme" className="p-2 rounded-lg hover:bg-surface-hover transition-colors">
+                        {isDark ? <Sun className="w-5 h-5 text-text-secondary" /> : <Moon className="w-5 h-5 text-text-secondary" />}
+                    </button>
                     {/* Wallet */}
                     <div onClick={() => router.push('/finance')} className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
                         <Wallet className="w-4 h-4 text-primary" />
