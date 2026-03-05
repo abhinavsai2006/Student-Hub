@@ -14,12 +14,6 @@ Why this project
 - Lightweight UI primitives for fast iteration and prototyping.
 - Example project to demonstrate Next.js App Router + TypeScript.
 
-Screenshots
-
-- Replace these with real screenshots in `public/` and update the paths below.
-
-- Desktop: ./public/screenshot-desktop.png
-- Mobile: ./public/screenshot-mobile.png
 
 Features
 
